@@ -1,0 +1,8 @@
+#Command for get all Route List in FastAPI.
+python -c "
+from main import app
+for r in app.routes:
+    if hasattr(r, 'methods'):
+        print(f'{list(r.methods)}\t{r.path}')
+"
+**************************End ************************
