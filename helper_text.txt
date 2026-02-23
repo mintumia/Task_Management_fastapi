@@ -6,3 +6,5 @@ for r in app.routes:
         print(f'{list(r.methods)}\t{r.path}')
 "
 **************************End ************************
+
+pip install -r requirements.txt
