@@ -5,8 +5,11 @@ from pathlib import Path
 from typing import List
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from routers import users_router
 
-app = FastAPI()
+from app import create_app
+
+app = create_app()
 
 while True:
     try:
@@ -29,29 +32,27 @@ class User(BaseModel):
     password: str
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+# @app.get("/")
+# async def root():
+#     return {"message": "Hello World"}
 
 
-@app.get("/users")
-def users():
-    cursor.execute("SELECT * FROM users")
-    data = cursor.fetchall()
-    return {"data": data}
+# @app.get("/users")
+# def users():
+#     cursor.execute("SELECT * FROM users")
+#     data = cursor.fetchall()
+#     return {"data": data}
 
 
-@app.post("/users/create")
-def create_user(user: User):
-    cursor.execute("""INSERT INTO users (id, name, designation, email, password)
-                      VALUES (%s, %s, %s, %s, %s) RETURNING * """, (user.id, user.name, user.designation, user.email, user.password))
+# @app.post("/users/create")
+# def create_user(user: User):
+#     cursor.execute("""INSERT INTO users (id, name, designation, email, password)
+#                       VALUES (%s, %s, %s, %s, %s) RETURNING * """, (user.id, user.name, user.designation, user.email, user.password))
+#
+#
+#
+#     new_user = cursor.fetchone()
+#     conn.commit()
+#     return {"data": new_user}
 
 
-
-    new_user = cursor.fetchone()
-    conn.commit()
-    return {"data": new_user}
-
-# @app.get("/users/{user_id}")
-# def read_user(user_id: int):
-#     return {"user_id": user_id}
