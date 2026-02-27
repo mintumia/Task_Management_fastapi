@@ -5,9 +5,9 @@ from pathlib import Path
 from typing import List
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from routers import users_router
 
 from app import create_app
+
 
 app = create_app()
 
@@ -32,9 +32,9 @@ class User(BaseModel):
     password: str
 
 
-# @app.get("/")
-# async def root():
-#     return {"message": "Hello World"}
+@app.get("/")
+async def root():
+    return [{"message": "Hello World"}]
 
 
 # @app.get("/users")

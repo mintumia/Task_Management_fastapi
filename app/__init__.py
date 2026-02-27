@@ -1,7 +1,11 @@
 from fastapi import FastAPI
-from routers import __all__
+from app.routers import users as users_router
 
 def create_app() -> FastAPI:
-    app = FastAPI()
-    app.include_router(__all__)
+    application = FastAPI()
+    print("Creating FastAPI app")
+    application.include_router(users_router.router)
+    return application
+    #app.include_router(users_router)
     return app
+
