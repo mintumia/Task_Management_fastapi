@@ -1,5 +1,5 @@
 import time
-from fastapi import FastAPI, HTTPException, status, responses
+from fastapi import FastAPI, HTTPException, status, responses, Request
 from pydantic import BaseModel, HttpUrl
 from pathlib import Path
 from typing import List
@@ -31,6 +31,19 @@ class User(BaseModel):
     email: str
     password: str
 
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+
+    response = await call_next(request)
+
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+
+    print(f"{request.method} {request.url.path} completed in {process_time} header: {request.headers['authorization']}")
+
+    return response
 
 @app.get("/")
 async def root():
