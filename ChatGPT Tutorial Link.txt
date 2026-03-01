@@ -1,0 +1,2 @@
+#SQLAlchemy PostgreSQL CRUD Tutorial
+https://chatgpt.com/share/69a4ccf1-d85c-8004-bbf4-24112ae27ba7
