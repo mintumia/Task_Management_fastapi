@@ -1,5 +1,5 @@
 import time
-from fastapi import FastAPI, HTTPException, status, responses, Request
+from fastapi import FastAPI, HTTPException, status, responses, Request, Depends
 from pydantic import BaseModel, HttpUrl
 from pathlib import Path
 from typing import List
@@ -8,8 +8,14 @@ from psycopg2.extras import RealDictCursor
 
 from app import create_app
 
+from .db.database import engine, get_db
+from . import models
+from sqlalchemy.orm import Session
+
 
 app = create_app()
+
+models.Base.metadata.create_all(bind=engine)
 
 while True:
     try:
