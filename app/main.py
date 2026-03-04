@@ -11,31 +11,48 @@ from app import create_app
 from .db.database import engine, get_db
 from . import models
 from sqlalchemy.orm import Session
+#import models.users as models
+import app.schemas.user as schemas
+import app.services.user_service as crud
+#from database import engine, SessionLocal
 
 
 app = create_app()
 
-models.Base.metadata.create_all(bind=engine)
-
-while True:
-    try:
-        conn = psycopg2.connect(host="localhost", database="Task_Management_fastapi", user="postgres", password="1234",
-                                cursor_factory=RealDictCursor)
-        cursor = conn.cursor()
-        print("Connected to PostgreSQL")
-        break
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-        time.sleep(2)
 
 
-class User(BaseModel):
-    id: int
-    name: str
-    designation: str
-    email: str
-    password: str
+
+
+
+
+
+
+@app.post("/users", response_model=schemas.UserResponse)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    return crud.create_user(db, user)
+
+
+@app.get("/users", response_model=list[schemas.UserResponse])
+def read_users(db: Session = Depends(get_db)):
+    return crud.get_users(db)
+
+
+@app.get("/users/{user_id}", response_model=schemas.UserResponse)
+def read_user(user_id: int, db: Session = Depends(get_db)):
+    user = crud.get_user(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+@app.delete("/users/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    user = crud.delete_user(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "User deleted"}
+
+
 
 
 @app.middleware("http")
@@ -56,22 +73,6 @@ async def root():
     return [{"message": "Hello World"}]
 
 
-# @app.get("/users")
-# def users():
-#     cursor.execute("SELECT * FROM users")
-#     data = cursor.fetchall()
-#     return {"data": data}
 
-
-# @app.post("/users/create")
-# def create_user(user: User):
-#     cursor.execute("""INSERT INTO users (id, name, designation, email, password)
-#                       VALUES (%s, %s, %s, %s, %s) RETURNING * """, (user.id, user.name, user.designation, user.email, user.password))
-#
-#
-#
-#     new_user = cursor.fetchone()
-#     conn.commit()
-#     return {"data": new_user}
 
 
