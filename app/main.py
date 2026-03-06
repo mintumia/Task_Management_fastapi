@@ -26,6 +26,34 @@ async def root():
     return [{"message": "Hello World"}]
 
 
+# @app.post("/users")
+# async def create_user(request: Request, db: Session = Depends(get_db)):
+#     data = await request.json()
+#     db_user = models.User(data.get("name"), data.get("email"))
+#     db.add(db_user)
+#     db.commit()
+#     db.refresh(db_user)
+#     return db_user
+
+@app.post("/users")
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+
+    db_user = models.User(
+        name=user.name,
+        email=user.email
+    )
+
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+@app.post("/tests")
+async def test(request: Request):
+    data = await request.json()
+    db_user = data.get("name"), data.get("email")
+    return db_user
+
 
 
 
